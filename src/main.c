@@ -313,24 +313,16 @@ static const struct RendererFuncs kSdlRendererFuncs = {
   &SdlRenderer_EndDraw,
 };
 
+
+bool running;
+uint32 lastTick;
+uint32 curTick;
+uint32 frameCtr;
+uint8 audiopaused;
+bool has_bug_in_title;
+
 static void main_loop() {  /* this will run often, possibly at the monitor's refresh rate */
-  bool custom_size = g_config.window_width != 0 && g_config.window_height != 0;
-  int window_width = custom_size ? g_config.window_width : g_current_window_scale * g_snes_width;
-  int window_height = custom_size ? g_config.window_height : g_current_window_scale * g_snes_height;
-
-  SDL_Window *window = SDL_CreateWindow(kWindowTitle, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, window_width, window_height, g_win_flags);
-  if(window == NULL) {
-    printf("Failed to create window: %s\n", SDL_GetError());
-  }
-  g_window = window;
-
-  bool running = true;
-  uint32 lastTick = SDL_GetTicks();
-  uint32 curTick = 0;
-  uint32 frameCtr = 0;
-  uint8 audiopaused = true;
-  bool has_bug_in_title = false;
-
+  
   if (!running) {
     if (g_config.autosave)
       HandleCommand(kKeys_Save + 0, true);
@@ -347,7 +339,7 @@ static void main_loop() {  /* this will run often, possibly at the monitor's ref
       SwitchImpl_Exit();
     #endif
   
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(g_window);
     SDL_Quit();
 
     #ifdef __EMSCRIPTEN__
@@ -587,20 +579,18 @@ int main(int argc, char** argv) {
   if (g_config.autosave)
     HandleCommand(kKeys_Load + 0, true);
 
-  bool running = true;
-  uint32 lastTick = SDL_GetTicks();
-  uint32 curTick = 0;
-  uint32 frameCtr = 0;
-  uint8 audiopaused = true;
-  bool has_bug_in_title = false;
+  running = true;
+  lastTick = SDL_GetTicks();
+  curTick = 0;
+  frameCtr = 0;
+  audiopaused = true;
+  has_bug_in_title = false;
 
-  while (running) {
-    #ifdef __EMSCRIPTEN__
-    emscripten_set_main_loop(main_loop, 0, 1);
-    #else
-    while (1) { main_loop(); }
-    #endif
-  }
+  #ifdef __EMSCRIPTEN__
+  emscripten_set_main_loop(main_loop, 0, 1);
+  #else
+  while (1) { main_loop(); }
+  #endif
 }
 
 static void RenderDigit(uint8 *dst, size_t pitch, int digit, uint32 color, bool big) {

@@ -15,7 +15,7 @@ emmake make -j$(nproc)
 ## Link
 
 ```
-emcc -flto -O3 **/*.o libgl.a -o index.html -sUSE_SDL=2 -sENVIRONMENT=web --preload-file sm.smc --preload-file sm.ini -Wl,-u,fileno -lidbfs.js
+emcc -flto -O3 **/*.o libgl.a -o index.html --shell-file ../shell.html -sUSE_SDL=2 -sENVIRONMENT=web --preload-file sm.smc --preload-file sm.ini -Wl,-u,fileno -lidbfs.js
 ```
 
 

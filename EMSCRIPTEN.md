@@ -8,9 +8,9 @@ emcmake cmake ..
 emmake make -j$(nproc)
 ```
 
-## Add rom and configuration file
+## Add configuration file
 
-`sm.smc` and `sm.ini` must be copied to `build` directory.
+`sm.ini` must be copied to `build` directory.
 
 ## Link
 

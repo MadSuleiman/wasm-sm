@@ -70,7 +70,7 @@ find_library(MATHLIB m)
 # Target properties
 target_link_libraries(sm PRIVATE
                       $<$<BOOL:${MATHLIB}>:m>
-                      SDL2 gl)
+                      SDL2 gl idbfs.js)
 
 set_target_properties(sm PROPERTIES C_STANDARD 11)
 

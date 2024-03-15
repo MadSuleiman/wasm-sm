@@ -565,11 +565,22 @@ int main(int argc, char** argv) {
   PpuBeginDrawing(snes->snes_ppu, g_pixels, 256 * 4, 0);
   PpuBeginDrawing(snes->my_ppu, g_my_pixels, 256 * 4, 0);
 
+  // Mount 'saves' directory in browser's persistent IndexedDB
+  EM_ASM(
+      FS.mkdir('/saves');
+      FS.mount(IDBFS, {}, '/saves');
+      FS.syncfs(true, function (err) {
+          // Error
+      });
+  );
+
+/*
 #if defined(_WIN32)
   _mkdir("saves");
 #else
   mkdir("saves", 0755);
 #endif
+*/
 
   RtlReadSram();
 
@@ -660,6 +671,12 @@ static void HandleCommand(uint32 j, bool pressed) {
     RtlSaveLoad(kSaveLoad_Load, j - kKeys_Load);
   } else if (j <= kKeys_Save_Last) {
     RtlSaveLoad(kSaveLoad_Save, j - kKeys_Save);
+    // Sync FS after each write
+    EM_ASM(
+        FS.syncfs(function (err) {
+            // Error
+        });
+    );
   } else if (j <= kKeys_Replay_Last) {
     RtlSaveLoad(kSaveLoad_Replay, j - kKeys_Replay);
   } else if (j <= kKeys_LoadRef_Last) {

@@ -731,6 +731,7 @@ void RtlWriteSram(void) {
   if (f) {
     fwrite(g_sram, 1, 8192, f);
     fclose(f);
+    // FIXME Should sync FS after each write
   } else {
     fprintf(stderr, "Unable to write saves/sm.srm\n");
   }

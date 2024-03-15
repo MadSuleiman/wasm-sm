@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Emscripten-Generated Code</title>
+    <title>Super Metroid WASM</title>
     <style>
       .emscripten { padding-right: 0; margin-left: auto; margin-right: auto; display: block; }
       textarea.emscripten { font-family: monospace; width: 80%; }
@@ -58,7 +58,8 @@
     </div>
     <hr/>
     <div class="emscripten">
-      <input type="checkbox" id="resize">Resize canvas
+	  <input type="file" id="romfile" name="romfile" accept="application/vnd.nintendo.snes.rom" onchange="Module.loadRomFile()" />ROM file
+	  <input type="checkbox" id="resize">Resize canvas
       <input type="checkbox" id="pointerLock" checked>Lock/hide mouse pointer
       &nbsp;&nbsp;&nbsp;
       <input type="button" value="Fullscreen" onclick="Module.requestFullscreen(document.getElementById('pointerLock').checked, 
@@ -72,8 +73,83 @@
       var statusElement = document.getElementById('status');
       var progressElement = document.getElementById('progress');
       var spinnerElement = document.getElementById('spinner');
+	  var romfileInputElement = document.getElementById("romfile");
+
+	  const EXPECTED_HASH = 'da957f0d63d14cb441d215462904c4fa8519c613';
+
+	  function buf2hex(buffer) {
+		return [...new Uint8Array(buffer)]
+			.map(x => x.toString(16).padStart(2, '0'))
+			.join('');
+	  }
 
       var Module = {
+		loadRomFile: (function() {
+			console.log('loadRomFile');
+			for (const file of romfileInputElement.files) {
+				console.log(file);
+
+				// TODO if sha1 matches, store in indexedDB FS ??
+				let reader = new FileReader();
+				reader.onload = function() {
+					console.log('File is %d bytes long', reader.result.byteLength);
+
+					// Check SHA-1 hash
+					crypto.subtle.digest("SHA-1", reader.result).then(hash => {
+						if (EXPECTED_HASH !== buf2hex(hash)) {
+							console.error('Wrong rom file hash: %s. Expected %s.', buf2hex(hash), EXPECTED_HASH);
+							alert('Wrong rom file!');
+						} else {
+							// ROM is correct
+							console.log('Storing file into IndexedDB filesystem...');
+							var fd = FS.open('/roms/sm.smc', "w+");
+							FS.write(fd, new Uint8Array(reader.result), 0, reader.result.byteLength, 0);
+							FS.close(fd);
+							FS.syncfs(function (err) {
+								if (err) {
+									console.error(err);
+									alert('Failed to store selected file');
+								} else {
+									console.log('Starting game with selected rom file...');
+									this.callMain();
+								}
+							});
+						}
+					});
+				};
+				reader.onerror = function() {
+					console.error('Failed to read selected file');
+					alert('Failed to read selected file');
+				};
+
+				console.log('Reading selected file...');
+				reader.readAsArrayBuffer(file);
+			}
+
+
+		}),
+		preRun: [
+			(async function() {
+				console.log("preRun hook: look for rom in IndexedDB filesystem");
+				// Mount 'roms' directory in browser's persistent IndexedDB
+				FS.mkdir('/roms');
+				FS.mount(IDBFS, {}, '/roms');
+				FS.syncfs(true, function (err) {
+					if (err) {
+						console.error(err);
+						alert('Failed to mount \'roms\' filesystem');
+					} else {
+						var rompath = FS.analyzePath('/roms/sm.smc', true);
+						console.log(rompath);
+						if (rompath.exists) {
+							console.log('ROM file already in filesystem');
+							console.log('Starting game with stored rom file...');
+							this.callMain();
+						}
+					}
+				});
+			})
+		],
         print: (function() {
           var element = document.getElementById('output');
           if (element) element.value = ''; // clear browser cache

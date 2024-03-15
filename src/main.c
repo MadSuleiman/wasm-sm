@@ -512,8 +512,18 @@ int main(int argc, char** argv) {
     g_renderer_funcs = kSdlRendererFuncs;
   }
 
+  // 'roms' directory is already mounted in JS to provide rom file
+  // Mount 'roms' directory in browser's persistent IndexedDB
+  /*EM_ASM(
+      FS.mkdir('/roms');
+      FS.mount(IDBFS, {}, '/roms');
+      FS.syncfs(true, function (err) {
+          // Error
+      });
+  );*/
+
   // init snes, load rom
-  const char* filename = argv[0] ? argv[0] : "sm.smc";
+  const char* filename = argv[0] ? argv[0] : "/roms/sm.smc";
   Snes *snes = SnesInit(filename);
 
   if(snes == NULL) {

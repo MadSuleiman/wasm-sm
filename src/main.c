@@ -512,18 +512,8 @@ int main(int argc, char** argv) {
     g_renderer_funcs = kSdlRendererFuncs;
   }
 
-  // 'roms' directory is already mounted in JS to provide rom file
-  // Mount 'roms' directory in browser's persistent IndexedDB
-  /*EM_ASM(
-      FS.mkdir('/roms');
-      FS.mount(IDBFS, {}, '/roms');
-      FS.syncfs(true, function (err) {
-          // Error
-      });
-  );*/
-
   // init snes, load rom
-  const char* filename = argv[0] ? argv[0] : "/roms/sm.smc";
+  const char* filename = argv[0] ? argv[0] : "/persist-sm/sm.smc";
   Snes *snes = SnesInit(filename);
 
   if(snes == NULL) {
@@ -574,15 +564,6 @@ int main(int argc, char** argv) {
 
   PpuBeginDrawing(snes->snes_ppu, g_pixels, 256 * 4, 0);
   PpuBeginDrawing(snes->my_ppu, g_my_pixels, 256 * 4, 0);
-
-  // Mount 'saves' directory in browser's persistent IndexedDB
-  EM_ASM(
-      FS.mkdir('/saves');
-      FS.mount(IDBFS, {}, '/saves');
-      FS.syncfs(true, function (err) {
-          // Error
-      });
-  );
 
 /*
 #if defined(_WIN32)
@@ -681,12 +662,6 @@ static void HandleCommand(uint32 j, bool pressed) {
     RtlSaveLoad(kSaveLoad_Load, j - kKeys_Load);
   } else if (j <= kKeys_Save_Last) {
     RtlSaveLoad(kSaveLoad_Save, j - kKeys_Save);
-    // Sync FS after each write
-    EM_ASM(
-        FS.syncfs(function (err) {
-            // Error
-        });
-    );
   } else if (j <= kKeys_Replay_Last) {
     RtlSaveLoad(kSaveLoad_Replay, j - kKeys_Replay);
   } else if (j <= kKeys_LoadRef_Last) {

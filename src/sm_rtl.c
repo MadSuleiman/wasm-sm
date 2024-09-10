@@ -452,9 +452,9 @@ void RtlSaveLoad(int cmd, int slot) {
     int i = slot - 256;
     if (cmd == kSaveLoad_Save || i >= sizeof(kBugSaves) / sizeof(kBugSaves[0]))
       return;
-    sprintf(name, "saves/%s.sav", kBugSaves[i]);
+    sprintf(name, "persist-sm/%s.sav", kBugSaves[i]);
   } else {
-    sprintf(name, "saves/save%d.sav", slot);
+    sprintf(name, "persist-sm/save%d.sav", slot);
   }
   printf("*** %s slot %d\n",
     cmd == kSaveLoad_Save ? "Saving" : cmd == kSaveLoad_Load ? "Loading" : "Replaying", slot);
@@ -714,10 +714,10 @@ void RtlCheat(char c) {
 }
 
 void RtlReadSram(void) {
-  FILE *f = fopen("saves/sm.srm", "rb");
+  FILE *f = fopen("persist-sm/sm.srm", "rb");
   if (f) {
     if (fread(g_sram, 1, 8192, f) != 8192)
-      fprintf(stderr, "Error reading saves/sm.srm\n");
+      fprintf(stderr, "Error reading persist-sm/sm.srm\n");
     fclose(f);
     RtlSynchronizeWholeState();
     ByteArray_Resize(&state_recorder.base_snapshot, 8192);
@@ -726,14 +726,14 @@ void RtlReadSram(void) {
 }
 
 void RtlWriteSram(void) {
-  rename("saves/sm.srm", "saves/sm.srm.bak");
-  FILE *f = fopen("saves/sm.srm", "wb");
+  rename("persist-sm/sm.srm", "persist-sm/sm.srm.bak");
+  FILE *f = fopen("persist-sm/sm.srm", "wb");
   if (f) {
     fwrite(g_sram, 1, 8192, f);
     fclose(f);
     // FIXME Should sync FS after each write
   } else {
-    fprintf(stderr, "Unable to write saves/sm.srm\n");
+    fprintf(stderr, "Unable to write persist-sm/sm.srm\n");
   }
 }
 

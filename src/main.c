@@ -513,7 +513,7 @@ int main(int argc, char** argv) {
   }
 
   // init snes, load rom
-  const char* filename = argv[0] ? argv[0] : "/persist-sm/sm.smc";
+  const char* filename = argv[0] ? argv[0] : "sm.smc";
   Snes *snes = SnesInit(filename);
 
   if(snes == NULL) {

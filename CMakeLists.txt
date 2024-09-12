@@ -35,7 +35,8 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
 		${CMAKE_SOURCE_DIR}/include
 		${SDL2_INCLUDE_DIRS}
 	)
-
+    
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --embed-file ${CMAKE_SOURCE_DIR}/sm.smc@/")
 	set_target_properties(${target_name} PROPERTIES LINK_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/sm.sfc)
 else()
 	if (NINTENDO_SWITCH)

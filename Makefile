@@ -19,7 +19,7 @@ endif
 
 all: $(TARGET_EXEC)
 $(TARGET_EXEC): $(OBJS) $(RES)
-	$(CC) $^ -o $@ $(LDFLAGS) $(SDLFLAGS) -sALLOW_MEMORY_GROWTH=1 -sWASM=1 -sINVOKE_RUN=0 -sENVIRONMENT=web -sEXPORTED_RUNTIME_METHODS="['FS','ccall','cwrap']" -sFILESYSTEM=1 -sFORCE_FILESYSTEM=1 -lidbfs.js --embed-file sm.ini --shell-file shell.html
+	$(CC) $^ -o $@ $(LDFLAGS) $(SDLFLAGS) -sALLOW_MEMORY_GROWTH=1 -sWASM=1 -sINVOKE_RUN=0 -sENVIRONMENT=web -sEXPORTED_RUNTIME_METHODS="['FS','ccall','cwrap']" -sFILESYSTEM=1 -sFORCE_FILESYSTEM=1 -lidbfs.js --embed-file sm.smc --embed-file sm.ini --shell-file shell.html
 
 %.o : %.c
 	$(CC) -c $(CFLAGS) $< -o $@

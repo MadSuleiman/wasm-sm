@@ -718,7 +718,7 @@ void WalkingSpacePirates_Func_WalkL(void) {  // 0xB2FD44
       E->base.x_pos = E->x_pos_backup;
 
       if (result) {
-        EnemyFunc_BBBF(cur_enemy_index, INT16_SHL16(-9));
+        EnemyFunc_BBBF(cur_enemy_index, -INT16_SHL16(9));
         if (!Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, -14337)) {
           if ((int16)(E->base.x_pos - E->walljump_arc_center_y_pos) >= 0)
             return;

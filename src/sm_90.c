@@ -6431,11 +6431,11 @@ void Samus_UpdateSuitPaletteIndex(void) {  // 0x90ECB6
 
 void MoveSamusWithControlPad(void) {  // 0x90ECD5
   if ((joypad1_lastkeys & kButton_Up) != 0)
-    Samus_MoveUp(INT16_SHL16(-4));
+    Samus_MoveUp(-INT16_SHL16(4));
   if ((joypad1_lastkeys & kButton_Down) != 0)
     Samus_MoveDown(INT16_SHL16(4));
   if ((joypad1_lastkeys & kButton_Left) != 0)
-    Samus_MoveLeft(INT16_SHL16(-4));
+    Samus_MoveLeft(-INT16_SHL16(4));
   if ((joypad1_lastkeys & kButton_Right) != 0)
     Samus_MoveRight(INT16_SHL16(4));
 }

@@ -2469,7 +2469,7 @@ LABEL_11:
   CheckEnemyColl_Result cres = Samus_CheckSolidEnemyColl(amt);
   if (cres.collision)
     goto LABEL_11;
-  amt = INT16_SHL16(-1);
+  amt = -INT16_SHL16(1);
   samus_collision_direction = 0;
 LABEL_10:
   Samus_MoveRight_NoSolidColl(amt);
@@ -3862,7 +3862,7 @@ void HandleCollDueToChangedPose(void) {
     samus_pose = samus_prev_pose;
     return;
   }
-  amt = Samus_CollDetectChangedPose(INT16_SHL16(-samus_y_radius_diff));
+  amt = Samus_CollDetectChangedPose(-INT16_SHL16(samus_y_radius_diff));
   if (samus_collision_flag)
     block_collision_flags = 1;
   samus_space_to_move_up_blocks = (amt >> 16);

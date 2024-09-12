@@ -435,7 +435,7 @@ void MaridiaBeybladeTurtle_Func6(uint16 k) {  // 0xA28F5F
 
 void MaridiaBeybladeTurtle_Func7(uint16 k) {  // 0xA28F8D
   MaridiaBeybladeTurtle_Func4();
-  if (!(Enemy_MoveDown(k, INT16_SHL16(-1)))) {
+  if (!(Enemy_MoveDown(k, -INT16_SHL16(1)))) {
     if (CheckIfEnemyTouchesSamus(k))
       --extra_samus_y_displacement;
     Enemy_MaridiaTurtle *E = Get_MaridiaTurtle(k);

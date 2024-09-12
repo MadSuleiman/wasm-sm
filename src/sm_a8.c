@@ -2664,7 +2664,7 @@ const uint16 *WreckedShipRobot_Instr_4(uint16 k, const uint16 *jp) {  // 0xA8CD0
   WreckedShipRobot_Func_2(cur_enemy_index);
   Enemy_WreckedShipRobot *E = Get_WreckedShipRobot(cur_enemy_index);
   E->wsrt_var_A = -512;
-  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, INT16_SHL16(-4))) {
+  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, -INT16_SHL16(4))) {
     E->wsrt_var_B += 8;
     return INSTR_RETURN_ADDR(addr_kWreckedShipRobot_Ilist_C73F);
   } else {
@@ -2694,7 +2694,7 @@ const uint16 *WreckedShipRobot_Instr_9(uint16 k, const uint16 *jp) {  // 0xA8CDA
   WreckedShipRobot_Func_2(cur_enemy_index);
   Enemy_WreckedShipRobot *E = Get_WreckedShipRobot(cur_enemy_index);
   E->wsrt_var_A = -512;
-  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, INT16_SHL16(-4))) {
+  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, -INT16_SHL16(4))) {
     E->wsrt_var_B += 8;
     return INSTR_RETURN_ADDR(addr_kWreckedShipRobot_Ilist_C73F);
   } else if (CheckIfEnemyTouchesSamus(cur_enemy_index)) {
@@ -2800,7 +2800,7 @@ const uint16 *WreckedShipRobot_Instr_16(uint16 k, const uint16 *jp) {  // 0xA8CF
   WreckedShipRobot_Func_2(cur_enemy_index);
   Enemy_WreckedShipRobot *E = Get_WreckedShipRobot(cur_enemy_index);
   E->wsrt_var_A = 512;
-  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, INT16_SHL16(-4))) {
+  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, -INT16_SHL16(4))) {
     E->wsrt_var_B += 8;
     return INSTR_RETURN_ADDR(addr_stru_A8C6E9);
   } else {
@@ -2830,7 +2830,7 @@ const uint16 *WreckedShipRobot_Instr_17(uint16 k, const uint16 *jp) {  // 0xA8D0
   WreckedShipRobot_Func_2(cur_enemy_index);
   Enemy_WreckedShipRobot *E = Get_WreckedShipRobot(cur_enemy_index);
   E->wsrt_var_A = 512;
-  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, INT16_SHL16(-4))) {
+  if (Enemy_MoveRight_IgnoreSlopes(cur_enemy_index, -INT16_SHL16(4))) {
     E->wsrt_var_B += 8;
     return INSTR_RETURN_ADDR(addr_stru_A8C6E9);
   } else if (CheckIfEnemyTouchesSamus(cur_enemy_index)) {

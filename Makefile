@@ -1,11 +1,11 @@
-TARGET_EXEC:=sm
+TARGET_EXEC:=sm.html
 
 SRCS:=$(wildcard src/*.c src/snes/*.c) third_party/gl_core/gl_core_3_1.c
 OBJS:=$(SRCS:%.c=%.o)
 
 PYTHON:=/usr/bin/env python3
 CFLAGS:=$(if $(CFLAGS),$(CFLAGS),-O2 -fno-strict-aliasing -Werror )
-CFLAGS:=${CFLAGS} $(shell sdl2-config --cflags) -DSYSTEM_VOLUME_MIXER_AVAILABLE=0 -I.
+CFLAGS:=${CFLAGS} -DSYSTEM_VOLUME_MIXER_AVAILABLE=0 -sUSE_SDL=2 -I.
 
 ifeq (${OS},Windows_NT)
     WINDRES:=windres
@@ -19,7 +19,7 @@ endif
 
 all: $(TARGET_EXEC)
 $(TARGET_EXEC): $(OBJS) $(RES)
-	$(CC) $^ -o $@ $(LDFLAGS) $(SDLFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS) $(SDLFLAGS) -sALLOW_MEMORY_GROWTH=1 -sWASM=1 -sINVOKE_RUN=0 -sENVIRONMENT=web -sEXPORTED_RUNTIME_METHODS="['FS','ccall','cwrap']" -sFILESYSTEM=1 -sFORCE_FILESYSTEM=1 -lidbfs.js  --embed-file sm.smc --embed-file sm.ini --shell-file shell.html
 
 %.o : %.c
 	$(CC) -c $(CFLAGS) $< -o $@
